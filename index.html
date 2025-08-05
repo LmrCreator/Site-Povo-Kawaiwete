@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Interativo sobre o povo Kawaiwete | Conheça e Aprenda</title>
+    <meta name="description" content="Explore a cultura Kawaiwete de forma interativa. Um projeto de feira de ciências que apresenta a história, língua e tradições indígenas com um quiz, galeria e mais.">
+    <meta name="keywords" content="Kawaiwete, Feira de Ciências, Luiz Miguel Rodrigues, Vicente, Povo indígena, Colégio Universo, Site interativo, folclore, quiz, cultura">
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 17px;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        /* Container principal */
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #0056b3;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0056b3;
+            margin-top: 0;
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #007bff;
+            margin-top: 40px;
+        }
+        h3 {
+            font-size: 1.3em;
+            color: #4a4a4a;
+        }
+        /* Abas de navegação */
+        .tab-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab-button {
+            flex: 1 1 auto;
+            background-color: #f1f1f1;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 15px 20px;
+            font-size: 1em;
+            transition: background-color 0.3s, color 0.3s;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .tab-button:hover {
+            background-color: #ddd;
+        }
+        .tab-button.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .tab-content {
+            display: none;
+            padding: 25px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        /* Seções dentro das abas */
+        section {
+            padding: 20px 0;
+        }
+        /* Mapa */
+        #mapa iframe {
+            width: 100%;
+            max-width: 800px;
+            height: 450px;
+            border: 1px solid #ddd;
+            margin: 20px auto;
+            border-radius: 8px;
+            display: block;
+        }
+        /* Botões */
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        .botao-mostrar {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .botao-mostrar:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+        .botao-esconder {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .botao-esconder:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+        #folclore-lendas-conteudo button {
+            background-color: #007bff;
+            color: #fff;
+        }
+        #folclore-lendas-conteudo button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        /* Conteúdo de Língua e Folclore */
+        #lingua, #folclore-lendas-conteudo, #comentarios {
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-top: 20px;
+            background-color: #fcfcfc;
+        }
+        #lingua p, #folclore p {
+            margin-bottom: 8px;
+        }
+        #lingua p b {
+            color: #0056b3;
+        }
+        /* Formulário de Comentários */
+        #comentarios form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        #comentarios label {
+            font-weight: bold;
+            color: #555;
+        }
+        #comentarios input[type="text"],
+        #comentarios textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        #comentarios textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        #enviar-comentario {
+            background-color: #6c757d;
+            color: #fff;
+            align-self: flex-start;
+        }
+        #enviar-comentario:hover {
+            background-color: #5a6268;
+        }
+        #lista-comentarios {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        #lista-comentarios > div {
+            background-color: #f9f9f9;
+            border: 1px solid #e9e9e9;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        #lista-comentarios > div b {
+            color: #007bff;
+        }
+        #lista-comentarios > div button {
+            background-color: #17a2b8;
+            color: #fff;
+            padding: 8px 15px;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        #lista-comentarios > div button:hover {
+            background-color: #138496;
+        }
+        #lista-comentarios h3 {
+            font-size: 1.1em;
+            color: #666;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        #lista-comentarios .divResposta {
+            margin-left: 20px;
+            border-left: 3px solid #ccc;
+            padding-left: 10px;
+            margin-top: 8px;
+        }
+        /* Seção de Quiz */
+        .quiz-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .quiz-container label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        .quiz-container label input {
+            margin-right: 10px;
+        }
+        .feedback-quiz {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: none;
+        }
+        .feedback-quiz.correto {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .feedback-quiz.incorreto {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .tab-buttons {
+                flex-direction: column;
+            }
+            .tab-button {
+                border-bottom: 1px solid #ddd;
+            }
+            h1 {
+                font-size: 2em;
+            }
+        }
+        /* Rodapé */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #343a40;
+            color: #f8f9fa;
+            border-top: 5px solid #0056b3;
+            border-radius: 8px;
+        }
+        footer h3, footer h4 {
+            margin: 5px 0;
+            color: #e9ecef;
+        }
+        footer h5 {
+            margin: 5px 0;
+            color: #e9ecef;
+            font-size: 1em;
+            font-style: italic;
+        }
+        footer a {
+            color: #89cff0;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Site Interativo sobre o povo Kawaiwete</h1>
+    </header>
+    <main>
+        <div class="tab-container">
+            <div class="tab-buttons" role="tablist">
+                <button class="tab-button active" onclick="openTab(event, 'home')" role="tab" aria-controls="home" aria-selected="true">Introdução</button>
+                <button class="tab-button" onclick="openTab(event, 'lingua-folclore')" role="tab" aria-controls="lingua-folclore" aria-selected="false">Língua e Folclore</button>
+                <button class="tab-button" onclick="openTab(event, 'quiz')" role="tab" aria-controls="quiz" aria-selected="false">Quiz</button>
+                <button class="tab-button" onclick="openTab(event, 'comentarios-mapa')" role="tab" aria-controls="comentarios-mapa" aria-selected="false">Comentários e Mapa</button>
+            </div>
+            <div id="home" class="tab-content active" role="tabpanel">
+                <section>
+                    <h2>Bem-vindo(a)!</h2>
+                    <p>Este site é um projeto de feira de ciências interativo dedicado a explorar e compartilhar a rica cultura do povo Kawaiwete. Aqui você encontrará informações sobre sua língua, folclore, história e muito mais, tudo organizado de forma acessível para que você possa aprender de forma divertida. Clique nas abas acima para começar sua jornada.</p>
+                </section>
+            </div>
+            <div id="lingua-folclore" class="tab-content" role="tabpanel">
+                <section>
+                    <h2>Língua Kawaiwete</h2>
+                    <div id="lingua">
+                        <h3>Dicionário Interativo</h3>
+                        <input type="text" id="dicionario-busca" placeholder="Busque por uma palavra...">
+                        <div id="dicionario-resultados"></div>
+                    </div>
+                </section>
+                <hr>
+                <section>
+                    <h2>Folclore e Lendas</h2>
+                    <div id="folclore-lendas-conteudo">
+                        <h3>Folclore do Povo Kawaiwete</h3>
+                        <div id="texto-introducao">
+                            <p>Os Kawaiwete são um povo indígena que também têm seu próprio folclore...</p>
+                            <button id="alternar-folclore" onclick="alternarFolclore()">Mostrar Folclore e Lendas</button>
+                        </div>
+                        <div id="folclore-completo" style="display: none;">
+                            <p>Os Kawaiwete são um povo indígena que também têm seu próprio folclore, aqui ele será melhor explicado. O folclore e as lendas dos Kawaiwete são na maioria muito parecidos com os dos outros povos indígenas brasileiros, com várias narrativas sobre a origem do povo, a criação do mundo e a relação com a natureza, essas lendas são transmitidas oralmente e desempenham um papel fundamental na educação e na transmissão dos valores culturais Kawaiwete. Um dos mitos centrais é sobre Tuaiararé, o criador dos Kawaiwete, e a busca por uma esposa, onde acontecem várias aventuras que o levaram a criar diferentes seres e elementos da natureza, nesse conto ele é descrito como aquele que transformou plantas e animais em pessoas, dando origem ao povo. Outra lenda importante é a de Kupeirup, uma mulher viúva, que pede para ser queimada no meio da roça para que suas cinzas se transformem em produtos agrícolas, se sacrificando para que seus filhos tivessem alimento. Cada parte do corpo de Kupeirup deu origem a diferentes tipos de plantas cultivadas pelos Kawaiwete. Os Kawaiwete possuem uma cosmologia complexa, com diferentes níveis do universo e seres poderosos, incluindo "chefes animais" e divindades do céu. O processo de nomeação também é muito valorizado, pois em sua cultura reflete a relação do indivíduo com a comunidade e a natureza.</p>
+                            <button onclick="alternarFolclore()">Voltar</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div id="quiz" class="tab-content" role="tabpanel">
+                <section>
+                    <h2>Quiz Interativo</h2>
+                    <div class="quiz-container">
+                        <div id="quiz-pergunta"></div>
+                        <div id="quiz-opcoes"></div>
+                        <button id="quiz-responder">Responder</button>
+                        <div id="quiz-feedback" class="feedback-quiz"></div>
+                        <button id="quiz-proxima" style="display: none;">Próxima Pergunta</button>
+                    </div>
+                </section>
+            </div>
+            <div id="comentarios-mapa" class="tab-content" role="tabpanel">
+                <section>
+                    <h2>Mapa Interativo</h2>
+                    <p>Há uma aldeia Kayabi (Kawaiwete) que fica na fronteira do Mato Grosso com o Pará no mapa abaixo, pode ser explorada abaixo.</p>
+                    <div id="mapa">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d3256.8268920573455!2d-57.84011559493031!3d-7.9564266299928!3m2!1i1024!2i768!4f13.1!5e1!3m2!1spt-BR!2sbr!4v1754416348031!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </section>
+                <hr>
+                <section>
+                    <h2>Comentários, Perguntas e Respostas</h2>
+                    <div id="comentarios">
+                        <form id="form-comentario">
+                            <label for="nome-comentario">Nome:</label>
+                            <input type="text" id="nome-comentario" name="nome" required>
+                            <label for="comentario-texto">Comentário ou Pergunta:</label>
+                            <textarea id="comentario-texto" name="comentario" required></textarea>
+                            <button type="submit" id="enviar-comentario">Enviar Comentário ou Pergunta</button>
+                        </form>
+                        <div id="lista-comentarios"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <h3><b>Desenvolvido por: Luiz Miguel Rodrigues.</b></h3>
+        <h4><b>Grupo: Vicente e Luiz Miguel.</b></h4>
+        <h4><b>Turma: 7°B.</b></h4>
+        <h4><b>Matéria: História.</b></h4>
+        <h3><em>Trabalho Completo:</em></h3>
+        <p><b><a href="https://www.canva.com/design/DAGuqgTpEsk/GijA-K63DdC2-dYiEnYmPg/edit?utm_content=DAGuqgTpEsk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank">https://www.canva.com/design/DAGuqgTpEsk/GijA-K63DdC2-dYiEnYmPg/edit?utm_content=DAGuqgTpEsk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton</a></b></p>
+        <h3><em>Fontes:</em></h3>
+        <p><em><a href="https://pib.socioambiental.org/pt/Povo:Kaiabi" target="_blank">Socioambiental – Kaiabi/Kawaiwete</a></em></p>
+        <p><em><a href="https://site-antigo.socioambiental.org/pt-br/noticias-socioambientais/kawaiwete-lutam-para-manter-suas-rocas-tradicionais" target="_blank">Notícias sobre roças tradicionais dos Kawaiwete</a></em></p>
+        <p><em><a href="https://pt.wikipedia.org/wiki/Caiabis" target="_blank">Wikipedia – Caiabis</a></em></p>
+        <p><em><a href="https://www.sil.org/system/files/reapdata/45/72/24/4572241492590646018462695639676606922/kyz_Dicionario_Kayabi_Weiss_2005.pdf" target="_blank">Dicionário Kayabi (Weiss, 2005)</a></em></p>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            initTabs();
+            dicionarioModule.init();
+            quizModule.init();
+            initComentarios();
+        });
+
+        const dicionarioModule = (function() {
+            const dicionario = [
+                { pt: "Sol", kw: "Yvá" },
+                { pt: "Água", kw: "Y" },
+                { pt: "Terra", kw: "Ywy" },
+                { pt: "Mãe", kw: "Nande" },
+                { pt: "Pai", kw: "Tuxaua" },
+                { pt: "Casa", kw: "Oka" },
+                { pt: "Família", kw: "Te'ýi" },
+                { pt: "Amigo", kw: "Angiru" },
+                { pt: "Obrigado", kw: "Aguyje" },
+                { pt: "Eu", kw: "Axe" },
+                { pt: "Você", kw: "Nde" },
+                { pt: "Nós", kw: "Ore" },
+                { pt: "Eles", kw: "Ha'e" },
+                { pt: "Comer", kw: "Karú" },
+                { pt: "Dormir", kw: "Kerú" },
+                { pt: "Falar", kw: "Nhe'ẽ" },
+                { pt: "Ouvir", kw: "Endú" },
+                { pt: "Ver", kw: "Ma'é" },
+                { pt: "Vem", kw: "Eju" },
+                { pt: "Vá", kw: "Eho" },
+                { pt: "História", kw: "Marandu" },
+                { pt: "Bom dia", kw: "Kova'e ára porã" },
+                { pt: "Boa tarde", kw: "Kova'e ka'aru porã" },
+                { pt: "Boa noite", kw: "Kova'e pynhu porã" },
+                { pt: "Eu sou feliz", kw: "Axe vy'a" },
+                { pt: "Eu amo você", kw: "Axe aju nde rehe" },
+                { pt: "Você é meu amigo", kw: "Nde axe angiru" },
+                { pt: "Eu estou aqui", kw: "Axe ápe" },
+                { pt: "Eu vou embora", kw: "Axe aha" },
+                { pt: "Eu quero beber água", kw: "Axe aime y uú" }
+            ];
+
+            function renderizar(lista) {
+                const container = document.getElementById('dicionario-resultados');
+                container.innerHTML = '';
+                if (lista.length === 0) {
+                    container.innerHTML = '<p>Nenhum resultado encontrado.</p>';
+                    return;
+                }
+                const ul = document.createElement('ul');
+                ul.style.paddingLeft = '20px';
+                lista.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `"${item.pt}" em Kawaiwete: <b>${item.kw}</b>`;
+                    ul.appendChild(li);
+                });
+                container.appendChild(ul);
+            }
+
+            function filtrar() {
+                const termo = document.getElementById('dicionario-busca').value.toLowerCase();
+                if (termo === '') {
+                    renderizar(dicionario);
+                } else {
+                    const resultados = dicionario.filter(item =>
+                        item.pt.toLowerCase().includes(termo) ||
+                        item.kw.toLowerCase().includes(termo)
+                    );
+                    renderizar(resultados);
+                }
+            }
+
+            function init() {
+                const input = document.getElementById('dicionario-busca');
+                input.addEventListener('input', filtrar);
+                renderizar(dicionario);
+            }
+
+            return { init };
+        })();
+
+        const quizModule = (function() {
+            const quizPerguntas = [
+                {
+                    pergunta: "Quem é considerado o criador do povo Kawaiwete em um de seus mitos centrais, que transformou plantas e animais em pessoas?",
+                    opcoes: ["Kupeirup", "Ywy", "Tuaiararé", "Karú"],
+                    resposta: "Tuaiararé"
+                },
+                {
+                    pergunta: "Segundo a lenda de Kupeirup, o que aconteceu com suas cinzas após ela ser queimada na roça?",
+                    opcoes: ["Se transformaram em produtos agrícolas.", "Foram levadas pelo vento.", "Deram origem a um rio.", "Viraram uma floresta."],
+                    resposta: "Se transformaram em produtos agrícolas."
+                },
+                {
+                    pergunta: "Qual palavra em Kawaiwete é a tradução de 'Obrigado'?",
+                    opcoes: ["Yvy", "Aguyje", "Karú", "Te'ýi"],
+                    resposta: "Aguyje"
+                },
+                {
+                    pergunta: "A cultura Kawaiwete valoriza muito o processo de nomeação, pois ele reflete a relação do indivíduo com o quê?",
+                    opcoes: ["O sol e a lua", "A aldeia vizinha", "A comunidade e a natureza", "Os animais da floresta"],
+                    resposta: "A comunidade e a natureza"
+                },
+                {
+                    pergunta: "O que o povo Kawaiwete utiliza para transmitir suas lendas e valores culturais de geração para geração?",
+                    opcoes: ["Textos e livros", "Pinturas em paredes", "Músicas e danças", "Transmissão oral"],
+                    resposta: "Transmissão oral"
+                },
+                {
+                    pergunta: "No dicionário do site, a palavra 'Oka' significa:",
+                    opcoes: ["Água", "Casa", "Terra", "Amigo"],
+                    resposta: "Casa"
+                },
+                {
+                    pergunta: "Qual é a tradução de 'Y' para o português, de acordo com o dicionário do site?",
+                    opcoes: ["Sol", "Água", "Comer", "Dormir"],
+                    resposta: "Água"
+                },
+                {
+                    pergunta: "A palavra 'Angiru' em Kawaiwete significa:",
+                    opcoes: ["Pai", "Mãe", "Amigo", "Família"],
+                    resposta: "Amigo"
+                },
+                {
+                    pergunta: "O que 'Kova'e ára porã' significa na língua Kawaiwete?",
+                    opcoes: ["Eu sou feliz", "Boa noite", "Boa tarde", "Bom dia"],
+                    resposta: "Bom dia"
+                },
+                {
+                    pergunta: "A palavra 'Nhe'ẽ' na língua Kawaiwete significa:",
+                    opcoes: ["Falar", "Ouvir", "Ver", "Vem"],
+                    resposta: "Falar"
+                }
+            ];
+
+            let perguntaAtual = 0;
+
+            function renderizarPergunta() {
+                const qp = document.getElementById('quiz-pergunta');
+                const qo = document.getElementById('quiz-opcoes');
+                const btnResp = document.getElementById('quiz-responder');
+                const btnNext = document.getElementById('quiz-proxima');
+                const feedback = document.getElementById('quiz-feedback');
+
+                qo.innerHTML = '';
+                feedback.style.display = 'none';
+
+                if (perguntaAtual < quizPerguntas.length) {
+                    const questao = quizPerguntas[perguntaAtual];
+                    qp.textContent = questao.pergunta;
+                    questao.opcoes.forEach(opcao => {
+                        const label = document.createElement('label');
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.name = 'resposta-quiz';
+                        input.value = opcao;
+                        label.appendChild(input);
+                        label.appendChild(document.createTextNode(` ${opcao}`));
+                        qo.appendChild(label);
+                    });
+                    btnResp.style.display = 'inline-block';
+                    btnNext.style.display = 'none';
+                    btnNext.textContent = "Próxima Pergunta";
+                } else {
+                    qp.textContent = "Quiz finalizado! Obrigado por participar.";
+                    btnResp.style.display = 'none';
+                    btnNext.style.display = 'inline-block';
+                    btnNext.textContent = "Refazer Quiz";
+                }
+            }
+
+            function responderQuiz() {
+                const sel = document.querySelector('input[name="resposta-quiz"]:checked');
+                const feedback = document.getElementById('quiz-feedback');
+                if (!sel) {
+                    alert('Por favor, selecione uma opção.');
+                    return;
+                }
+                const correta = quizPerguntas[perguntaAtual].resposta;
+                if (sel.value === correta) {
+                    feedback.textContent = 'Resposta correta!';
+                    feedback.className = 'feedback-quiz correto';
+                } else {
+                    feedback.textContent = `Resposta incorreta. A correta é: ${correta}`;
+                    feedback.className = 'feedback-quiz incorreto';
+                }
+                feedback.style.display = 'block';
+                document.getElementById('quiz-responder').style.display = 'none';
+                document.getElementById('quiz-proxima').style.display = 'inline-block';
+
+                // Desabilitar todas as opções após a resposta
+                document.querySelectorAll('input[name="resposta-quiz"]').forEach(radio => {
+                    radio.disabled = true;
+                });
+            }
+
+            function proximaPergunta() {
+                if (perguntaAtual < quizPerguntas.length - 1) {
+                    perguntaAtual++;
+                } else {
+                    perguntaAtual = 0; // Reinicia o quiz
+                }
+                renderizarPergunta();
+            }
+
+            function init() {
+                document.getElementById('quiz-responder').addEventListener('click', responderQuiz);
+                document.getElementById('quiz-proxima').addEventListener('click', proximaPergunta);
+                renderizarPergunta();
+            }
+
+            return { init };
+        })();
+
+        function initTabs() {
+            // Garante que a aba 'home' está ativa por padrão
+            const homeTab = document.getElementById('home');
+            const homeButton = document.querySelector('.tab-button');
+            if (homeTab && homeButton) {
+                homeTab.classList.add('active');
+                homeButton.classList.add('active');
+            }
+        }
+        
+        function openTab(evt, tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function alternarFolclore() {
+            const intro = document.getElementById('texto-introducao');
+            const full = document.getElementById('folclore-completo');
+            intro.style.display = intro.style.display === "none" ? "block" : "none";
+            full.style.display = full.style.display === "none" ? "block" : "none";
+        }
+
+        let comentarios = [];
+        function initComentarios() {
+            comentarios = JSON.parse(localStorage.getItem('comentarios') || '[]');
+            mostrarComentarios();
+            document.getElementById('form-comentario').addEventListener('submit', e => {
+                e.preventDefault();
+                const nome = document.getElementById('nome-comentario').value.trim();
+                const texto = document.getElementById('comentario-texto').value.trim();
+                if (!nome || !texto) { alert('Preencha nome e comentário.'); return; }
+                comentarios.push({ nome, comentario: texto, respostas: [] });
+                localStorage.setItem('comentarios', JSON.stringify(comentarios));
+                mostrarComentarios();
+                document.getElementById('form-comentario').reset();
+                alert('Comentário enviado com sucesso!');
+            });
+        }
+        function mostrarComentarios() {
+            const cont = document.getElementById('lista-comentarios');
+            cont.innerHTML = '';
+            comentarios.forEach((c, i) => {
+                const div = document.createElement('div');
+                div.innerHTML = `<p><b>${c.nome}:</b> ${c.comentario}</p>`;
+                const btResp = document.createElement('button');
+                btResp.textContent = 'Responder';
+                btResp.className = 'botao-mostrar';
+                btResp.onclick = () => {
+                    const rn = prompt('Seu nome:'); if (!rn) return;
+                    const rt = prompt('Sua resposta:'); if (!rt) return;
+                    c.respostas.push({ nome: rn, resposta: rt });
+                    localStorage.setItem('comentarios', JSON.stringify(comentarios));
+                    mostrarComentarios();
+                };
+                const btDel = document.createElement('button');
+                btDel.textContent = 'Deletar';
+                btDel.className = 'botao-esconder';
+                btDel.onclick = () => {
+                    if (confirm('Deletar este comentário?')) {
+                        comentarios.splice(i,1);
+                        localStorage.setItem('comentarios', JSON.stringify(comentarios));
+                        mostrarComentarios();
+                    }
+                };
+                div.appendChild(btResp);
+                div.appendChild(btDel);
+                if (c.respostas.length) {
+                    const dresp = document.createElement('div');
+                    dresp.innerHTML = '<h3>Respostas:</h3>';
+                    dresp.className = 'divRespostas';
+                    c.respostas.forEach((r, j) => {
+                        const rr = document.createElement('div');
+                        rr.className = 'divResposta';
+                        rr.innerHTML = `<p><b>${r.nome}:</b> ${r.resposta}</p>`;
+                        const bt = document.createElement('button');
+                        bt.textContent = 'Deletar Resposta';
+                        bt.className = 'botao-esconder';
+                        bt.style.fontSize = '0.8em';
+                        bt.onclick = () => {
+                            if (confirm('Deletar essa resposta?')) {
+                                c.respostas.splice(j,1);
+                                localStorage.setItem('comentarios', JSON.stringify(comentarios));
+                                mostrarComentarios();
+                            }
+                        };
+                        rr.appendChild(bt);
+                        dresp.appendChild(rr);
+                    });
+                    div.appendChild(dresp);
+                }
+                cont.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
