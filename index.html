@@ -32,9 +32,9 @@
         }
         h1 {
             font-size: 2.5em;
-            color: #0056b3;
+            color: #a34c06;
             padding-bottom: 10px;
-            border-bottom: 2px solid #0056b3;
+            border-bottom: 2px solid #a34c06;
             margin-top: 0;
         }
         h2 {
@@ -398,6 +398,9 @@
             dicionarioModule.init();
             quizModule.init();
             initComentarios();
+
+            const alternarFolcloreBtn = document.getElementById('alternar-folclore');
+            if (alternarFolcloreBtn) alternarFolcloreBtn.addEventListener('click', alternarFolclore);
         });
 
         const dicionarioModule = (function() {
@@ -491,39 +494,29 @@
                     resposta: "Aguyje"
                 },
                 {
-                    pergunta: "A cultura Kawaiwete valoriza muito o processo de nomeação, pois ele reflete a relação do indivíduo com o quê?",
-                    opcoes: ["O sol e a lua", "A aldeia vizinha", "A comunidade e a natureza", "Os animais da floresta"],
-                    resposta: "A comunidade e a natureza"
+                    pergunta: "Qual é a população do povo Kawaiwete, de acordo com a informação de 2020?",
+                    opcoes: ["2.734", "1.500", "5.000", "273"],
+                    resposta: "2.734"
                 },
                 {
-                    pergunta: "O que o povo Kawaiwete utiliza para transmitir suas lendas e valores culturais de geração para geração?",
-                    opcoes: ["Textos e livros", "Pinturas em paredes", "Músicas e danças", "Transmissão oral"],
-                    resposta: "Transmissão oral"
+                    pergunta: "Em que estado do Brasil o povo Kawaiwete está localizado?",
+                    opcoes: ["Pará", "Mato Grosso", "Amazonas", "Rondônia"],
+                    resposta: "Mato Grosso"
                 },
                 {
-                    pergunta: "No dicionário do site, a palavra 'Oka' significa:",
-                    opcoes: ["Água", "Casa", "Terra", "Amigo"],
-                    resposta: "Casa"
+                    pergunta: "Qual é o tronco linguístico do povo Kawaiwete?",
+                    opcoes: ["Arawak", "Jê", "Tupi-Guarani", "Pano"],
+                    resposta: "Tupi-Guarani"
                 },
                 {
-                    pergunta: "Qual é a tradução de 'Y' para o português, de acordo com o dicionário do site?",
-                    opcoes: ["Sol", "Água", "Comer", "Dormir"],
-                    resposta: "Água"
+                    pergunta: "No final do século XIX, os Kawaiwete resistiram à ocupação de suas terras por quais empresas?",
+                    opcoes: ["Madeireiras", "Mineradoras", "Seringalistas", "Petrolíferas"],
+                    resposta: "Seringalistas"
                 },
                 {
-                    pergunta: "A palavra 'Angiru' em Kawaiwete significa:",
-                    opcoes: ["Pai", "Mãe", "Amigo", "Família"],
-                    resposta: "Amigo"
-                },
-                {
-                    pergunta: "O que 'Kova'e ára porã' significa na língua Kawaiwete?",
-                    opcoes: ["Eu sou feliz", "Boa noite", "Boa tarde", "Bom dia"],
-                    resposta: "Bom dia"
-                },
-                {
-                    pergunta: "A palavra 'Nhe'ẽ' na língua Kawaiwete significa:",
-                    opcoes: ["Falar", "Ouvir", "Ver", "Vem"],
-                    resposta: "Falar"
+                    pergunta: "O povo Kawaiwete aderiu a um manifesto contra projetos de hidrelétricas junto com quais outros povos indígenas?",
+                    opcoes: ["Xavante e Guarani", "Munduruku e Apiaká", "Yanomami e Tupi", "Araweté e Suruí"],
+                    resposta: "Munduruku e Apiaká"
                 }
             ];
 
@@ -544,12 +537,8 @@
                     qp.textContent = questao.pergunta;
                     questao.opcoes.forEach(opcao => {
                         const label = document.createElement('label');
-                        const input = document.createElement('input');
-                        input.type = 'radio';
-                        input.name = 'resposta-quiz';
-                        input.value = opcao;
-                        label.appendChild(input);
-                        label.appendChild(document.createTextNode(` ${opcao}`));
+                        label.innerHTML =
+                            `<input type="radio" name="resposta-quiz" value="${opcao}"> ${opcao}`;
                         qo.appendChild(label);
                     });
                     btnResp.style.display = 'inline-block';
@@ -581,18 +570,13 @@
                 feedback.style.display = 'block';
                 document.getElementById('quiz-responder').style.display = 'none';
                 document.getElementById('quiz-proxima').style.display = 'inline-block';
-
-                // Desabilitar todas as opções após a resposta
-                document.querySelectorAll('input[name="resposta-quiz"]').forEach(radio => {
-                    radio.disabled = true;
-                });
             }
 
             function proximaPergunta() {
                 if (perguntaAtual < quizPerguntas.length - 1) {
                     perguntaAtual++;
                 } else {
-                    perguntaAtual = 0; // Reinicia o quiz
+                    perguntaAtual = 0;
                 }
                 renderizarPergunta();
             }
