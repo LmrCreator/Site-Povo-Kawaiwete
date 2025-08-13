@@ -314,7 +314,7 @@
             <div id="home" class="tab-content active" role="tabpanel">
                 <section>
                     <h2>Bem-vindo(a)!</h2>
-                    <p>Este site é um projeto de feira de ciências interativo dedicado a explorar e compartilhar a rica cultura do povo Kawaiwete. Aqui você encontrará informações sobre sua língua, folclore, história e muito mais, tudo organizado de forma acessível para que você possa aprender de forma divertida. Clique nas abas acima para começar sua jornada.</p>
+                    <p>Este site é um projeto interativo de feira do conhecimento dedicado a explorar e compartilhar a rica cultura do povo Kawaiwete. Aqui você encontrará informações sobre sua língua, folclore, história e muito mais, tudo organizado de forma acessível para que você possa aprender de forma divertida. Clique nas abas acima para começar sua jornada.</p>
                 </section>
             </div>
             <div id="lingua-folclore" class="tab-content" role="tabpanel">
@@ -333,11 +333,11 @@
                         <h3>Folclore do Povo Kawaiwete</h3>
                         <div id="texto-introducao">
                             <p>Os Kawaiwete são um povo indígena que também têm seu próprio folclore...</p>
-                            <button id="alternar-folclore" onclick="alternarFolclore()">Mostrar Folclore e Lendas</button>
+                            <button id="alternar-folclore">Mostrar Folclore e Lendas</button>
                         </div>
                         <div id="folclore-completo" style="display: none;">
                             <p>Os Kawaiwete são um povo indígena que também têm seu próprio folclore, aqui ele será melhor explicado. O folclore e as lendas dos Kawaiwete são na maioria muito parecidos com os dos outros povos indígenas brasileiros, com várias narrativas sobre a origem do povo, a criação do mundo e a relação com a natureza, essas lendas são transmitidas oralmente e desempenham um papel fundamental na educação e na transmissão dos valores culturais Kawaiwete. Um dos mitos centrais é sobre Tuaiararé, o criador dos Kawaiwete, e a busca por uma esposa, onde acontecem várias aventuras que o levaram a criar diferentes seres e elementos da natureza, nesse conto ele é descrito como aquele que transformou plantas e animais em pessoas, dando origem ao povo. Outra lenda importante é a de Kupeirup, uma mulher viúva, que pede para ser queimada no meio da roça para que suas cinzas se transformem em produtos agrícolas, se sacrificando para que seus filhos tivessem alimento. Cada parte do corpo de Kupeirup deu origem a diferentes tipos de plantas cultivadas pelos Kawaiwete. Os Kawaiwete possuem uma cosmologia complexa, com diferentes níveis do universo e seres poderosos, incluindo "chefes animais" e divindades do céu. O processo de nomeação também é muito valorizado, pois em sua cultura reflete a relação do indivíduo com a comunidade e a natureza.</p>
-                            <button onclick="alternarFolclore()">Voltar</button>
+                            <button id="alternar-voltar">Voltar</button>
                         </div>
                     </div>
                 </section>
@@ -369,9 +369,9 @@
                         <form id="form-comentario">
                             <label for="nome-comentario">Nome:</label>
                             <input type="text" id="nome-comentario" name="nome" required>
-                            <label for="comentario-texto">Comentário ou Pergunta:</label>
+                            <label for="comentario-texto">Seu Comentário ou Pergunta:</label>
                             <textarea id="comentario-texto" name="comentario" required></textarea>
-                            <button type="submit" id="enviar-comentario">Enviar Comentário ou Pergunta</button>
+                            <button type="submit" id="enviar-comentario">Enviar Seu Comentário ou Pergunta</button>
                         </form>
                         <div id="lista-comentarios"></div>
                     </div>
@@ -401,6 +401,9 @@
 
             const alternarFolcloreBtn = document.getElementById('alternar-folclore');
             if (alternarFolcloreBtn) alternarFolcloreBtn.addEventListener('click', alternarFolclore);
+            
+            const alternarVoltarBtn = document.getElementById('alternar-voltar');
+            if (alternarVoltarBtn) alternarVoltarBtn.addEventListener('click', alternarFolclore);
         });
 
         const dicionarioModule = (function() {
