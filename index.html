@@ -451,29 +451,36 @@
                 <div id="comentarios-mapa" class="tab-content" role="tabpanel">
                     <section>
                         <h2>Mapa Interativo</h2>
-                        <p>Explore a localização de uma das aldeias Kayabi (Kawaiwete) na fronteira entre Mato Grosso e Pará.</p>
+                        <p>Localização da **Aldeia Mayrowi** (Escola Estadual Indígena Mayrowi Apiaka), na divisa MT/PA, às margens do Rio São Manuel.</p>
                         <div id="mapa">
                             <iframe 
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15444.606700543666!2d-52.54581455!3d-11.41373445!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x93309252c7104d49%3A0x89e18b871c828230!2sAldeia%20Kayabi%20M%C3%BAl%C3%BA!5e0!3m2!1spt-BR!2sbr!4v1700689230558!5m2!1spt-BR!2sbr" 
-                                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3951.399595726692!2d-57.84338152424761!3d-7.95759167929658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92523bfe477781ef%3A0x3b99a2f6448f7764!2sEscola%20Estadual%20Ind%C3%ADgena%20Mayrowi%20Apiaka!5e0!3m2!1spt-BR!2sbr!4v1739892915256!5m2!1spt-BR!2sbr" 
+                                width="600" 
+                                height="450" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
                                 referrerpolicy="no-referrer-when-downgrade"
-                                title="Mapa da Aldeia Kawaiwete">
+                                title="Localização da Escola Estadual Indígena Mayrowi Apiaka">
                             </iframe>
-                            <p style="text-align:center; font-size: 0.9em; color: #777;">(O mapa acima aponta para a região da Aldeia Kayabi Múlú, no Parque Indígena do Xingu, que é habitada pelo povo Kawaiwete.)</p>
+                            <p style="text-align:center; font-size: 0.9em; color: #777;">(O mapa acima aponta para a Escola Estadual Indígena Mayrowi Apiaka, na Aldeia Mayrowi, Apiacás, MT.)</p>
                         </div>
                     </section>
                     <hr>
-                    <section id="comentarios"> <h2>Comentários e Perguntas</h2>
+                    <section id="comentarios"> 
+                        <h2>Comentários e Perguntas</h2>
                          <p>Deixe sua mensagem, dúvida ou contribuição sobre o povo Kawaiwete!</p>
-                        <form id="form-comentario">
+                        <form id="form-comentario" target="hidden_iframe">
                             <label for="nome-comentario">Seu Nome:</label>
-                            <input type="text" id="nome-comentario" name="nome" required>
+                            <input type="text" id="nome-comentario" required>
                             
                             <label for="comentario-texto">Seu Comentário ou Pergunta:</label>
-                            <textarea id="comentario-texto" name="comentario" required></textarea>
+                            <textarea id="comentario-texto" required></textarea>
                             
                             <button type="submit" id="enviar-comentario">Enviar Comentário</button>
                         </form>
+
+                        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="comentarioEnviadoCallback();"></iframe>
                         
                         <div id="lista-comentarios">
                              <h3>Comentários Anteriores</h3>
@@ -492,7 +499,7 @@
         <p><b><a href="https://www.canva.com/design/DAGuqgTpEsk/GijA-K63DdC2-dYiEnYmPg/edit?utm_content=DAGuqgTpEsk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank" rel="noopener noreferrer">Link para o Canva</a></b></p>
         <h3><em>Fontes:</em></h3>
         <p><em><a href="https://pib.socioambiental.org/pt/Povo:Kaiabi" target="_blank" rel="noopener noreferrer">Socioambiental – Kaiabi/Kawaiwete</a></em></p>
-        <p><em><a href="https://site-antigo.socioambiental.org/pt-br/noticias-socioambientais/kawaiwete-lutam-para-manter-suas-rocas-tradicionais" target="_blank" rel="noopener noreferrer">Notícias sobre roças tradicionais dos Kawaiwete</a></em></p>
+        <p><em><a href="https://site-antigo.socioambiental.org/pt-br/noticias-socioambientais/kawaiwete-lutam-para-manter-seus-rocas-tradicionais" target="_blank" rel="noopener noreferrer">Notícias sobre roças tradicionais dos Kawaiwete</a></em></p>
         <p><em><a href="https://pt.wikipedia.org/wiki/Caiabis" target="_blank" rel="noopener noreferrer">Wikipedia – Caiabis</a></em></p>
         <p><em><a href="https://www.sil.org/system/files/reapdata/45/72/24/4572241492590646018462695639676606922/kyz_Dicionario_Kayabi_Weiss_2005.pdf" target="_blank" rel="noopener noreferrer">Dicionário Kayabi (Weiss, 2005)</a></em></p>
     </footer>
@@ -734,53 +741,49 @@
          function initComentariosGoogle() {
             const formComentarios = document.getElementById('form-comentario');
             if (formComentarios) {
+                
+                // 1. Configura o formulário para submeter para a URL do Forms via iframe invisível
+                formComentarios.action = FORM_URL;
+                formComentarios.method = 'POST';
+
+                // 2. Adiciona os nomes dos campos de entrada (IMPORTANTE!)
+                document.getElementById('nome-comentario').name = ID_NOME;
+                document.getElementById('comentario-texto').name = ID_COMENTARIO;
+
+                // 3. Adiciona listener para o evento de submissão
                 formComentarios.addEventListener('submit', function(event) {
-                    event.preventDefault(); 
-                
-                    const nomeInput = document.getElementById('nome-comentario');
-                    const comentarioInput = document.getElementById('comentario-texto');
-                    const containerComentarios = document.getElementById('lista-comentarios'); 
-
-                    if(!nomeInput || !comentarioInput || !containerComentarios) return; 
-
-                    const nome = nomeInput.value.trim();
-                    const comentario = comentarioInput.value.trim();
-                
-                    if (!nome || !comentario) {
-                        alert("Por favor, preencha seu nome e o comentário.");
-                        return;
-                    }
-            
-                    const formData = new FormData();
-                    formData.append(ID_NOME, nome); 
-                    formData.append(ID_COMENTARIO, comentario); 
-            
                     const statusEnvio = document.createElement('p');
+                    statusEnvio.id = 'status-envio';
                     statusEnvio.textContent = 'Enviando comentário...';
                     statusEnvio.style.fontStyle = 'italic';
-                    formComentarios.appendChild(statusEnvio); 
+                    formComentarios.parentNode.appendChild(statusEnvio); 
 
-            
-                    fetch(FORM_URL, { 
-                        method: 'POST', 
-                        body: formData, 
-                        mode: 'no-cors' // Necessário para evitar erros CORS no envio para Forms
-                    })
-                    .then(() => {
-                        alert("Comentário enviado com sucesso! Aguarde alguns instantes para aparecer.");
-                        nomeInput.value = ''; 
-                        comentarioInput.value = ''; 
-                        if(statusEnvio) statusEnvio.remove(); 
-                        setTimeout(carregarComentariosGoogle, 4000); // Dá 4 segundos para o Sheets atualizar
-                    })
-                    .catch(error => {
-                        alert('Erro ao enviar o comentário. Verifique o console do navegador (F12).');
-                         if(statusEnvio) statusEnvio.textContent = 'Erro no envio.'; 
-                        console.error('Erro ao enviar para Google Forms:', error);
-                        carregarComentariosGoogle(); 
-                    });
+                    // Desabilita o botão para evitar cliques múltiplos
+                    document.getElementById('enviar-comentario').disabled = true;
                 });
             }
+
+            // O `onload` do iframe chama esta função após o Forms retornar
+            window.comentarioEnviadoCallback = function() {
+                const statusEnvio = document.getElementById('status-envio');
+                const btn = document.getElementById('enviar-comentario');
+                
+                // Limpa os campos após o envio
+                document.getElementById('nome-comentario').value = ''; 
+                document.getElementById('comentario-texto').value = ''; 
+
+                if (statusEnvio) {
+                    statusEnvio.textContent = 'Comentário enviado! Carregando a lista...';
+                    setTimeout(() => { 
+                         if(statusEnvio.parentNode) statusEnvio.parentNode.removeChild(statusEnvio);
+                         if (btn) btn.disabled = false;
+                    }, 3000); 
+                }
+
+                // Dá tempo para o Google Sheets processar o novo comentário antes de recarregar
+                setTimeout(carregarComentariosGoogle, 4000); 
+            }
+
              carregarComentariosGoogle();
         }
 
@@ -800,6 +803,7 @@
                 .then(csvText => {
                     container.innerHTML = '<h3>Comentários Anteriores</h3>'; 
                     
+                    // Separa as linhas, ignora o cabeçalho
                     const linhas = csvText.split(/\r?\n/).slice(1).filter(line => line.trim() !== ''); 
                     
                     if (linhas.length === 0) {
@@ -808,11 +812,32 @@
                     }
 
                     linhas.reverse().forEach(linha => { 
-                        // Regex para separar colunas CSV, lidando com vírgulas dentro de aspas
-                        const colunas = linha.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-                        
+                         // Função de parsing manual para CSV (mais robusta)
+                        const colunas = [];
+                        let inQuotes = false;
+                        let currentField = '';
+                        for (let i = 0; i < linha.length; i++) {
+                            const char = linha[i];
+                            if (char === '"') {
+                                if (i + 1 < linha.length && linha[i + 1] === '"') {
+                                    // Aspas duplas dentro do campo (escapado)
+                                    currentField += '"';
+                                    i++;
+                                } else {
+                                    inQuotes = !inQuotes;
+                                }
+                            } else if (char === ',' && !inQuotes) {
+                                colunas.push(currentField);
+                                currentField = '';
+                            } else {
+                                currentField += char;
+                            }
+                        }
+                        colunas.push(currentField); // Adiciona o último campo
+
                         if (colunas.length >= 3) {
-                            // Limpa aspas extras e trim em cada coluna
+                            // Colunas esperadas: 0: Timestamp, 1: Nome, 2: Comentário
+                            // Remove aspas externas e substitui aspas duplas escapadas
                             const dataHora = colunas[0].trim().replace(/^"|"$/g, '').replace(/""/g, '"'); 
                             const nome = colunas[1].trim().replace(/^"|"$/g, '').replace(/""/g, '"'); 
                             const comentario = colunas[2].trim().replace(/^"|"$/g, '').replace(/""/g, '"'); 
@@ -830,7 +855,7 @@
                     });
                 })
                 .catch(error => {
-                    container.innerHTML = '<h3>Comentários Anteriores</h3><p style="color: red;">Erro ao carregar comentários. Certifique-se de que a planilha do Google está publicada como CSV.</p>';
+                    container.innerHTML = '<h3>Comentários Anteriores</h3><p style="color: red;">Erro ao carregar comentários. Verifique o console ou a publicação da sua planilha.</p>';
                     console.error("Erro detalhado ao buscar CSV:", error);
                 });
         }
