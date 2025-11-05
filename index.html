@@ -181,6 +181,16 @@
          #alternar-folclore:hover, #quiz-proxima:hover {
             background-color: #2980b9; /* Azul mais escuro */
         }
+        
+        /* Estilo para os botões de filtro do dicionário */
+        #dicionario-filtros .button-like {
+            margin-bottom: 10px;
+            padding: 6px 12px;
+            font-size: 0.9em;
+        }
+        #dicionario-filtros .button-like[style*="2980b9"] {
+            background-color: #2980b9 !important;
+        }
 
         /* Conteúdo de Língua e Folclore */
         #lingua, #folclore-lendas-conteudo {
@@ -410,6 +420,7 @@
                         <h2>Língua Kawaiwete</h2>
                         <div id="lingua">
                             <h3>Dicionário Interativo</h3>
+                            <div id="dicionario-filtros" style="margin-bottom: 10px;"></div>
                             <input type="text" id="dicionario-busca" placeholder="Busque por uma palavra em Português ou Kawaiwete...">
                             <div id="dicionario-resultados"><p>Carregando dicionário...</p></div>
                         </div>
@@ -438,6 +449,7 @@
                     <section>
                         <h2>Quiz Interativo</h2>
                         <p>Teste seus conhecimentos sobre a cultura Kawaiwete!</p>
+                        <p id="highest-score" style="text-align: center; font-weight: bold; color: #c0392b;">Maior Pontuação: 0/20</p>
                         <div class="quiz-container">
                             <div id="quiz-pergunta" class="pergunta">Carregando pergunta...</div>
                             <div id="quiz-opcoes" class="opcoes"></div>
@@ -520,6 +532,106 @@
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpCn7RRMD6ibSc9Cd5McE1YmWuG8AqnXiYHXfLIi2j9fuI4sU7M1VGwrK1IXJacdZUGk7PCiHamKuy/pub?gid=571985468&single=true&output=csv'; 
 
         // ======================================
+        // === DADOS SIMULADOS (JSON EXTERNO) ===
+        // ======================================
+        // Estes dados simulariam a leitura de arquivos dicionario.json e quiz.json
+        
+        const DICIONARIO_JSON_DATA = [
+            {"pt": "Sol", "kw": "Yvá", "fonetica": "(Eevá)", "categoria": "Natureza"},
+            {"pt": "Água", "kw": "Y", "fonetica": "(Ã)", "categoria": "Natureza"},
+            {"pt": "Terra", "kw": "Ywy", "fonetica": "(Eeví)", "categoria": "Natureza"},
+            {"pt": "Mãe", "kw": "Nande", "fonetica": "(Nãndê)", "categoria": "Família"},
+            {"pt": "Pai", "kw": "Tuxaua", "fonetica": "(Tuchauá)", "categoria": "Família"},
+            {"pt": "Casa", "kw": "Oka", "fonetica": "(Oká)", "categoria": "Objetos"},
+            {"pt": "Família", "kw": "Te'ýi", "fonetica": "(Te'í)", "categoria": "Família"},
+            {"pt": "Amigo", "kw": "Angiru", "fonetica": "(Angiru)", "categoria": "Relações"},
+            {"pt": "Obrigado", "kw": "Aguyje", "fonetica": "(Aguíjê)", "categoria": "Saudações"},
+            {"pt": "Eu", "kw": "Axe", "fonetica": "(Aché)", "categoria": "Pronomes"},
+            {"pt": "Você", "kw": "Nde", "fonetica": "(Ndê)", "categoria": "Pronomes"},
+            {"pt": "Nós", "kw": "Ore", "fonetica": "(O-rê)", "categoria": "Pronomes"},
+            {"pt": "Eles", "kw": "Ha'e", "fonetica": "(Ra'ê)", "categoria": "Pronomes"},
+            {"pt": "Comer", "kw": "Karú", "fonetica": "(Karú)", "categoria": "Verbos"},
+            {"pt": "Dormir", "kw": "Kerú", "fonetica": "(Kerú)", "categoria": "Verbos"},
+            {"pt": "Falar", "kw": "Nhe'ẽ", "fonetica": "(Nhe'ê)", "categoria": "Verbos"},
+            {"pt": "Ouvir", "kw": "Endú", "fonetica": "(Endú)", "categoria": "Verbos"},
+            {"pt": "Ver", "kw": "Ma'é", "fonetica": "(Ma'é)", "categoria": "Verbos"},
+            {"pt": "Vem", "kw": "Eju", "fonetica": "(Eju)", "categoria": "Comandos"},
+            {"pt": "Vá", "kw": "Eho", "fonetica": "(Ero)", "categoria": "Comandos"},
+            {"pt": "História", "kw": "Marandu", "fonetica": "(Marandú)", "categoria": "Cultura"},
+            {"pt": "Bom dia", "kw": "Kova'e ára porã", "fonetica": "(Kovai-á-ra po-rã)", "categoria": "Saudações"},
+            {"pt": "Boa tarde", "kw": "Kova'e ka'aru porã", "fonetica": "(Kovai ka'aru po-rã)", "categoria": "Saudações"},
+            {"pt": "Boa noite", "kw": "Kova'e pynhu porã", "fonetica": "(Kovai pinhu po-rã)", "categoria": "Saudações"},
+            {"pt": "Eu sou feliz", "kw": "Axe vy'a", "fonetica": "(Aché vi'á)", "categoria": "Frases"},
+            {"pt": "Eu amo você", "kw": "Axe aju nde rehe", "fonetica": "(Aché aju ndê re-hê)", "categoria": "Frases"},
+            {"pt": "Você é meu amigo", "kw": "Nde axe angiru", "fonetica": "(Ndê aché angiru)", "categoria": "Frases"},
+            {"pt": "Eu estou aqui", "kw": "Axe ápe", "fonetica": "(Aché á-pê)", "categoria": "Frases"},
+            {"pt": "Eu vou embora", "kw": "Axe aha", "fonetica": "(Aché a-há)", "categoria": "Frases"},
+            {"pt": "Eu quero beber água", "kw": "Axe aime y uú", "fonetica": "(Aché aí-mê ã u-ú)", "categoria": "Frases"},
+
+            {"pt": "Um", "kw": "Petéi", "fonetica": "(Pé-téi)", "categoria": "Números"},
+            {"pt": "Dois", "kw": "Mokõi", "fonetica": "(Mo-kõi)", "categoria": "Números"},
+            {"pt": "Três", "kw": "Mboapy", "fonetica": "(Mbo-apí)", "categoria": "Números"},
+            {"pt": "Quatro", "kw": "Irundy", "fonetica": "(I-rúndí)", "categoria": "Números"},
+            {"pt": "Cinco", "kw": "Po", "fonetica": "(Po)", "categoria": "Números"},
+            {"pt": "Seis", "kw": "Po ha petéi", "fonetica": "(Po ra pé-téi)", "categoria": "Números"},
+            {"pt": "Sete", "kw": "Po ha mokõi", "fonetica": "(Po ra mo-kõi)", "categoria": "Números"},
+            {"pt": "Oito", "kw": "Po ha mboapy", "fonetica": "(Po ra mbo-apí)", "categoria": "Números"},
+            {"pt": "Nove", "kw": "Po ha irundy", "fonetica": "(Po ra i-rúndí)", "categoria": "Números"},
+            {"pt": "Dez", "kw": "Po mokõi", "fonetica": "(Po mo-kõi)", "categoria": "Números"},
+            
+            {"pt": "Céu", "kw": "Yvága", "fonetica": "(Ivág-á)", "categoria": "Natureza"},
+            {"pt": "Fogo", "kw": "Oa", "fonetica": "(O-á)", "categoria": "Natureza"},
+            {"pt": "Chuva", "kw": "Amã", "fonetica": "(Amã)", "categoria": "Natureza"},
+            {"pt": "Dia", "kw": "Ára", "fonetica": "(Ára)", "categoria": "Natureza"},
+            {"pt": "Noite", "kw": "Pynhu", "fonetica": "(Pinhu)", "categoria": "Natureza"},
+            
+            {"pt": "Vermelho", "kw": "Pyta", "fonetica": "(Pita)", "categoria": "Cores"},
+            {"pt": "Preto", "kw": "Hũ", "fonetica": "(Rũ)", "categoria": "Cores"},
+            {"pt": "Branco", "kw": "Ting", "fonetica": "(Ting)", "categoria": "Cores"},
+            {"pt": "Verde", "kw": "Hovy", "fonetica": "(Roví)", "categoria": "Cores"},
+            
+            {"pt": "Criança", "kw": "Kunhãmirim", "fonetica": "(Kunha-mirim)", "categoria": "Relações"},
+            {"pt": "Chefe", "kw": "Mokãgwer", "fonetica": "(Mokang-wer)", "categoria": "Relações"},
+            {"pt": "Esposa", "kw": "Temireko", "fonetica": "(Temi-reko)", "categoria": "Família"},
+            {"pt": "Irmão", "kw": "Ky'y", "fonetica": "(Ki'í)", "categoria": "Família"},
+            
+            {"pt": "Jaguar", "kw": "Jaguareté", "fonetica": "(Jaguar-etê)", "categoria": "Animais"},
+            {"pt": "Capivara", "kw": "Kapi'yva", "fonetica": "(Kapi'iva)", "categoria": "Animais"},
+            {"pt": "Macaco", "kw": "Kae", "fonetica": "(Ka-é)", "categoria": "Animais"},
+            {"pt": "Cobra", "kw": "Mbo'i", "fonetica": "(Mboi)", "categoria": "Animais"},
+            
+            {"pt": "Dançar", "kw": "Jahú", "fonetica": "(Jarú)", "categoria": "Verbos"},
+            {"pt": "Cantar", "kw": "Mbaraka", "fonetica": "(Mbaraká)", "categoria": "Verbos"},
+            {"pt": "Correr", "kw": "Puru'a", "fonetica": "(Puru'á)", "categoria": "Verbos"},
+            {"pt": "Caçar", "kw": "Opir", "fonetica": "(O-pir)", "categoria": "Verbos"}
+        ];
+
+        const QUIZ_JSON_DATA = [
+            { "pergunta": "Quem é considerado o criador do povo Kawaiwete em um de seus mitos centrais, que transformou plantas e animais em pessoas?", "opcoes": ["Kupeirup", "Ywy", "Tuaiararé", "Karú"], "resposta": "Tuaiararé", "explicacao": "Tuaiararé é uma figura central no mito de origem, sendo o responsável por transformar seres em pessoas, dando início ao povo Kawaiwete.", "categoria": "Folclore"}, 
+            // QUESTÃO 2 CORRIGIDA: Foco no motivo do sacrifício, não no resultado.
+            { "pergunta": "Por que Kupeirup se sacrificou na roça?", "opcoes": ["Para fugir de um inimigo.", "Seus filhos passavam fome, e ela queria alimentá-los.", "Para agradar os chefes animais.", "Para ensinar o povo a dançar."], "resposta": "Seus filhos passavam fome, e ela queria alimentá-los.", "explicacao": "Seus filhos passavam fome então para alimentá-los Kupeirup se sacrificou, suas cinzas viraram produtos agricólas, garantindo o sustento do povo.", "categoria": "Folclore"}, 
+            { "pergunta": "Qual palavra em Kawaiwete é a tradução de 'Obrigado'?", "opcoes": ["Yvy", "Aguyje", "Karú", "Te'ýi"], "resposta": "Aguyje", "explicacao": "'Aguyje' é a expressão de gratidão na língua Kawaiwete, essencial para o vocabulário básico.", "categoria": "Língua"}, 
+            { "pergunta": "Qual é a população aproximada do povo Kawaiwete mencionada nas fontes?", "opcoes": ["Cerca de 1.500", "Cerca de 2.700", "Mais de 5.000", "Menos de 300"], "resposta": "Cerca de 2.700", "explicacao": "De acordo com dados recentes (geralmente do ISA), a população Kawaiwete está próxima de 2.700 indivíduos.", "categoria": "História"}, 
+            { "pergunta": "Em que estado do Brasil o povo Kawaiwete está principalmente localizado?", "opcoes": ["Pará", "Mato Grosso", "Amazonas", "Rondônia"], "resposta": "Mato Grosso", "explicacao": "A maior parte do povo Kawaiwete vive nas terras indígenas do Mato Grosso, na bacia do Rio Xingu, embora também haja presença no Pará.", "categoria": "História"}, 
+            { "pergunta": "Qual é o tronco linguístico do povo Kawaiwete?", "opcoes": ["Arawak", "Jê", "Tupi-Guarani", "Pano"], "resposta": "Tupi-Guarani", "explicacao": "A língua Kawaiwete (também chamada Kaiabi) faz parte da família linguística Tupi-Guarani, uma das mais amplamente faladas no Brasil.", "categoria": "Língua"}, 
+            { "pergunta": "Qual atividade econômica levou à invasão das terras Kawaiwete e forçou o povo a migrar no final do século XIX?", "opcoes": ["Extração de borracha (Seringalistas)", "Garimpo de ouro", "Exploração de madeira", "Criação de gado"], "resposta": "Extração de borracha (Seringalistas)", "explicacao": "A extração de borracha pelos Seringalistas foi a principal causa da invasão de terras e das migrações forçadas dos Kawaiwete no final do século XIX.", "categoria": "História"}, 
+            { "pergunta": "O povo Kawaiwete aderiu a um manifesto contra projetos de hidrelétricas junto com quais outros povos indígenas?", "opcoes": ["Xavante e Guarani", "Munduruku e Apiaká", "Yanomami e Tupi", "Araweté e Suruí"], "resposta": "Munduruku e Apiaká", "explicacao": "O povo Kawaiwete, juntamente com Munduruku e Apiaká, protestou contra a construção de barragens no Rio Tapajós/Teles Pires, que afeta suas terras.", "categoria": "História"},
+            { "pergunta": "Qual é a palavra Kawaiwete para 'Água'?", "opcoes": ["Ywy", "Y", "Oka", "Yvá"], "resposta": "Y", "explicacao": "A palavra 'Y' significa água. É uma das palavras mais comuns nas línguas Tupi-Guarani.", "categoria": "Língua"},
+            { "pergunta": "O que a palavra 'Oka' significa na língua Kawaiwete?", "opcoes": ["Fogo", "Céu", "Casa", "Pai"], "resposta": "Casa", "explicacao": "'Oka' é a palavra para casa ou moradia. 'Tuxaua' é Pai e 'Yvága' é Céu.", "categoria": "Língua"},
+            // QUESTÃO 11 CORRIGIDA: Foco na redução populacional (diferente de Q7), e explicação conecta ao contexto geográfico.
+            { "pergunta": "Qual fator foi a principal causa da drástica redução populacional dos Kawaiwete, levando a um grande êxodo no passado?", "opcoes": ["Gripe e outras doenças", "Conflitos com mineradores", "Invasão de garimpeiros", "Expansão da agropecuária"], "resposta": "Gripe e outras doenças", "explicacao": "A principal causa da drástica redução populacional foi a chegada de epidemias (gripe e sarampo) trazidas por não-indígenas, um fato histórico ligado às invasões da região dos rios Arinos, Paranatinga e Verde no final do século XIX.", "categoria": "História"},
+            { "pergunta": "O que a cultura Kawaiwete considera essencial para um indivíduo, pois reflete sua relação com a comunidade e a natureza?", "opcoes": ["O artesanato", "O processo de nomeação", "O cultivo da roça", "A caça"], "resposta": "O processo de nomeação", "explicacao": "O processo de nomeação é valorizado, refletindo o lugar do indivíduo na cosmologia e na sociedade Kawaiwete.", "categoria": "Cultura"},
+            { "pergunta": "Na cosmologia Kawaiwete, além do nosso mundo, quantos outros níveis do universo existem?", "opcoes": ["Um único nível", "Três níveis", "Diferentes níveis", "Nenhum outro nível"], "resposta": "Diferentes níveis", "explicacao": "O texto menciona que a cosmologia é complexa, com 'diferentes níveis do universo e seres poderosos'.", "categoria": "Folclore"},
+            { "pergunta": "Qual dos seguintes elementos não é mencionado como tendo dado origem a produtos agrícolas a partir de Kupeirup?", "opcoes": ["Suas cinzas", "Seu corpo", "Sua fala", "Partes de seu corpo"], "resposta": "Sua fala", "explicacao": "No mito de Kupeirup, o corpo e as cinzas da personagem se transformam em alimentos para o povo. A 'fala' (ou voz) não é mencionada como um elemento de transformação agrícola, ao contrário do corpo e das cinzas.", "categoria": "Folclore"},
+            { "pergunta": "Qual é a tradução de 'Um' em Kawaiwete?", "opcoes": ["Mokõi", "Petéi", "Mboapy", "Po"], "resposta": "Petéi", "explicacao": "A palavra 'Petéi' significa 'Um'. 'Mokõi' é dois, 'Mboapy' é três e 'Po' é cinco.", "categoria": "Língua"},
+            { "pergunta": "Qual é a cor 'Preto' em Kawaiwete?", "opcoes": ["Pyta", "Hũ", "Ting", "Hovy"], "resposta": "Hũ", "explicacao": "'Hũ' é Preto. 'Pyta' é Vermelho, 'Ting' é Branco e 'Hovy' é Verde.", "categoria": "Língua"},
+            { "pergunta": "Que tipo de ser é descrito como um 'chefe' poderoso na cosmologia Kawaiwete?", "opcoes": ["Chefes espirituais", "Chefes animais", "Chefes de guerra", "Chefes vegetais"], "resposta": "Chefes animais", "explicacao": "A cosmologia Kawaiwete inclui 'chefes animais' e divindades do céu.", "categoria": "Folclore"},
+            { "pergunta": "Qual é o principal rio que margeia a Aldeia Mayrowi, mencionada no mapa?", "opcoes": ["Rio Xingu", "Rio Tapajós", "Rio São Manuel", "Rio Araguaia"], "resposta": "Rio São Manuel", "explicacao": "O site menciona que a Aldeia Mayrowi está localizada às margens do Rio São Manuel.", "categoria": "História"},
+            { "pergunta": "Qual a tradução da frase 'Eu amo você'?", "opcoes": ["Axe vy'a", "Nde axe angiru", "Axe aju nde rehe", "Axe aha"], "resposta": "Axe aju nde rehe", "explicacao": "'Axe aju nde rehe' é a forma de expressar 'Eu amo você' em Kawaiwete.", "categoria": "Língua"},
+            { "pergunta": "O que a tradição oral dos Kawaiwete busca explicar?", "opcoes": ["Apenas a história do Brasil.", "Apenas a língua falada.", "A origem do mundo, do povo e sua relação com a natureza.", "Somente as regras da aldeia."], "resposta": "A origem do mundo, do povo e sua relação com a natureza.", "explicacao": "O texto de folclore explica que mitos e lendas abordam a origem do mundo, do povo e a relação com a natureza.", "categoria": "Cultura"}
+        ];
+
+        // ======================================
         // === JAVASCRIPT COMPLETO E FUNCIONAL ===
         // ======================================
         
@@ -569,32 +681,70 @@
 
         // --- Módulo do Dicionário ---
         const dicionarioModule = (function() {
-            const dicionario = [
-                { pt: "Sol", kw: "Yvá" }, { pt: "Água", kw: "Y" }, { pt: "Terra", kw: "Ywy" }, 
-                { pt: "Mãe", kw: "Nande" }, { pt: "Pai", kw: "Tuxaua" }, { pt: "Casa", kw: "Oka" }, 
-                { pt: "Família", kw: "Te'ýi" }, { pt: "Amigo", kw: "Angiru" }, { pt: "Obrigado", kw: "Aguyje" }, 
-                { pt: "Eu", kw: "Axe" }, { pt: "Você", kw: "Nde" }, { pt: "Nós", kw: "Ore" }, { pt: "Eles", kw: "Ha'e" }, 
-                { pt: "Comer", kw: "Karú" }, { pt: "Dormir", kw: "Kerú" }, { pt: "Falar", kw: "Nhe'ẽ" }, 
-                { pt: "Ouvir", kw: "Endú" }, { pt: "Ver", kw: "Ma'é" }, { pt: "Vem", kw: "Eju" }, { pt: "Vá", kw: "Eho" }, 
-                { pt: "História", kw: "Marandu" }, { pt: "Bom dia", kw: "Kova'e ára porã" }, 
-                { pt: "Boa tarde", kw: "Kova'e ka'aru porã" }, { pt: "Boa noite", kw: "Kova'e pynhu porã" }, 
-                { pt: "Eu sou feliz", kw: "Axe vy'a" }, { pt: "Eu amo você", kw: "Axe aju nde rehe" }, 
-                { pt: "Você é meu amigo", kw: "Nde axe angiru" }, { pt: "Eu estou aqui", kw: "Axe ápe" }, 
-                { pt: "Eu vou embora", kw: "Axe aha" }, { pt: "Eu quero beber água", kw: "Axe aime y uú" }
-            ];
+            let dicionario = [];
+            let filtroCategoriaAtual = 'Todos';
+
+            // Mock Fetch function for local testing/demonstration
+            async function fetchDicionario() {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        dicionario = DICIONARIO_JSON_DATA; // Usa dados mockados (60 palavras, categorias, fonética)
+                        resolve();
+                    }, 100);
+                });
+            }
+
+            function renderizarFiltros() {
+                const container = document.getElementById('dicionario-filtros');
+                if (!container || dicionario.length === 0) return;
+
+                // Extrai categorias únicas e garante "Todos" como primeira opção
+                const categorias = ['Todos', ...new Set(dicionario.map(item => item.categoria))];
+                
+                container.innerHTML = '';
+                categorias.forEach(categoria => {
+                    const button = document.createElement('button');
+                    button.textContent = categoria;
+                    button.className = 'button-like'; 
+                    button.style.fontSize = '0.9em';
+                    button.style.marginRight = '5px';
+                    
+                    // Define o estilo do botão com base no filtro atual
+                    if (categoria === filtroCategoriaAtual) {
+                        button.style.backgroundColor = '#2980b9'; // Cor ativa azul
+                        button.style.color = '#fff';
+                    } else {
+                        button.style.backgroundColor = '#ecf0f1'; // Cor padrão cinza claro
+                        button.style.color = '#444';
+                    }
+
+                    button.addEventListener('click', () => {
+                        filtroCategoriaAtual = categoria;
+                        renderizarFiltros(); // Atualiza o estado visual dos botões
+                        filtrar();
+                    });
+                    container.appendChild(button);
+                });
+            }
 
             function renderizar(lista) {
                 const container = document.getElementById('dicionario-resultados');
                 if (!container) return; 
                 container.innerHTML = ''; 
+                
                 if (lista.length === 0) {
                     container.innerHTML = '<p>Nenhum resultado encontrado.</p>';
                     return;
                 }
+                
                 const ul = document.createElement('ul');
                 lista.forEach(item => {
                     const li = document.createElement('li');
-                    li.innerHTML = `"${item.pt}" em Kawaiwete: <b>${item.kw}</b>`;
+                    li.innerHTML = `
+                        "${item.pt}" (${item.categoria}) em Kawaiwete: 
+                        <b>${item.kw}</b> 
+                        <span style="font-style: italic; color: #7f8c8d;">${item.fonetica}</span>
+                    `;
                     ul.appendChild(li);
                 });
                 container.appendChild(ul);
@@ -605,24 +755,36 @@
                 if (!inputBusca) return;
                 const termo = inputBusca.value.toLowerCase().trim();
                 
-                if (termo === '') {
-                    renderizar(dicionario); 
-                } else {
-                    const resultados = dicionario.filter(item => 
-                        item.pt.toLowerCase().includes(termo) || 
-                        item.kw.toLowerCase().includes(termo)
-                    );
-                    renderizar(resultados);
+                let resultados = dicionario;
+
+                // 1. Filtragem por Categoria
+                if (filtroCategoriaAtual !== 'Todos') {
+                    resultados = resultados.filter(item => item.categoria === filtroCategoriaAtual);
                 }
+
+                // 2. Filtragem por Texto
+                if (termo !== '') {
+                    resultados = resultados.filter(item => 
+                        item.pt.toLowerCase().includes(termo) || 
+                        item.kw.toLowerCase().includes(termo) ||
+                        (item.fonetica && item.fonetica.toLowerCase().includes(termo)) ||
+                        item.categoria.toLowerCase().includes(termo) // Busca também pela categoria
+                    );
+                }
+                
+                renderizar(resultados);
             }
 
-            function init() {
+            async function init() {
+                await fetchDicionario(); // Carrega os dados
+                
                 const inputBusca = document.getElementById('dicionario-busca');
                 if (inputBusca) {
                     inputBusca.addEventListener('input', filtrar);
-                    renderizar(dicionario); 
+                    renderizarFiltros();
+                    filtrar(); 
                 } else {
-                    console.error("Elemento #dicionario-busca não encontrado.");
+                    document.getElementById('dicionario-resultados').innerHTML = '<p style="color:red;">Erro ao carregar dados do dicionário.</p>';
                 }
             }
 
@@ -631,18 +793,57 @@
 
         // --- Módulo do Quiz ---
         const quizModule = (function() {
-             const quizPerguntas = [
-                { pergunta: "Quem é considerado o criador do povo Kawaiwete em um de seus mitos centrais, que transformou plantas e animais em pessoas?", opcoes: ["Kupeirup", "Ywy", "Tuaiararé", "Karú"], resposta: "Tuaiararé" }, 
-                { pergunta: "Segundo a lenda de Kupeirup, o que aconteceu com suas cinzas após ela ser queimada na roça?", opcoes: ["Se transformaram em produtos agrícolas.", "Foram levadas pelo vento.", "Deram origem a um rio.", "Viraram uma floresta."], resposta: "Se transformaram em produtos agrícolas." }, 
-                { pergunta: "Qual palavra em Kawaiwete é a tradução de 'Obrigado'?", opcoes: ["Yvy", "Aguyje", "Karú", "Te'ýi"], resposta: "Aguyje" }, 
-                { pergunta: "Qual é a população aproximada do povo Kawaiwete mencionada nas fontes?", opcoes: ["Cerca de 1.500", "Cerca de 2.700", "Mais de 5.000", "Menos de 300"], resposta: "Cerca de 2.700" }, 
-                { pergunta: "Em que estado do Brasil o povo Kawaiwete está principalmente localizado?", opcoes: ["Pará", "Mato Grosso", "Amazonas", "Rondônia"], resposta: "Mato Grosso" }, 
-                { pergunta: "Qual é o tronco linguístico do povo Kawaiwete?", opcoes: ["Arawak", "Jê", "Tupi-Guarani", "Pano"], resposta: "Tupi-Guarani" }, 
-                { pergunta: "No final do século XIX, os Kawaiwete resistiram à ocupação de suas terras por quais empresas?", opcoes: ["Madeireiras", "Mineradoras", "Seringalistas", "Petrolíferas"], resposta: "Seringalistas" }, 
-                { pergunta: "O povo Kawaiwete aderiu a um manifesto contra projetos de hidrelétricas junto com quais outros povos indígenas?", opcoes: ["Xavante e Guarani", "Munduruku e Apiaká", "Yanomami e Tupi", "Araweté e Suruí"], resposta: "Munduruku e Apiaká" }
-            ];
+            let quizPerguntas = [];
             let perguntaAtual = 0;
             let pontuacao = 0;
+            const highestScoreKey = 'kawaiwete_highest_score';
+            const totalQuestions = 20; 
+            
+            // Mock Fetch function for local testing/demonstration
+            async function fetchQuiz() {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        // Faz uma cópia para que as flags de acerto sejam resetadas
+                        quizPerguntas = JSON.parse(JSON.stringify(QUIZ_JSON_DATA)); 
+                        quizPerguntas.sort(() => Math.random() - 0.5); // Embaralha na carga
+                        resolve();
+                    }, 100);
+                });
+            }
+
+            function getHighestScore() {
+                return parseInt(localStorage.getItem(highestScoreKey) || 0);
+            }
+
+            function setHighestScore(score) {
+                const currentHighest = getHighestScore();
+                if (score > currentHighest) {
+                    localStorage.setItem(highestScoreKey, score);
+                    updateHighestScoreDisplay(score);
+                }
+            }
+
+            function updateHighestScoreDisplay(score = getHighestScore()) {
+                const display = document.getElementById('highest-score');
+                if (display) {
+                    display.textContent = `🏆 Maior Pontuação: ${score}/${totalQuestions}`;
+                }
+            }
+
+            function calcularResumoCategorias() {
+                const resumo = {};
+                quizPerguntas.forEach(q => {
+                    const cat = q.categoria;
+                    if (!resumo[cat]) {
+                        resumo[cat] = { total: 0, acertos: 0 };
+                    }
+                    resumo[cat].total++;
+                    if (q.acertou) {
+                        resumo[cat].acertos++;
+                    }
+                });
+                return resumo;
+            }
 
             function renderizarPergunta() {
                 const qp = document.getElementById('quiz-pergunta');
@@ -656,6 +857,8 @@
                 qo.innerHTML = ''; 
                 feedback.style.display = 'none';
                 feedback.textContent = ''; 
+                
+                updateHighestScoreDisplay();
 
                 if (perguntaAtual < quizPerguntas.length) {
                     const questao = quizPerguntas[perguntaAtual];
@@ -672,12 +875,30 @@
                     btnNext.style.display = 'none';
                     btnNext.textContent = "Próxima Pergunta";
                 } else {
-                    qp.textContent = `🎉 Quiz finalizado! Sua pontuação: ${pontuacao} de ${quizPerguntas.length} corretas.`;
+                    // Fim do Quiz - Tela de Conclusão Aprimorada
+                    setHighestScore(pontuacao);
+                    const resumo = calcularResumoCategorias();
+
+                    let resumoHTML = '<ul style="list-style: none; padding: 0;">';
+                    for (const categoria in resumo) {
+                        const acertos = resumo[categoria].acertos;
+                        const total = resumo[categoria].total;
+                        const percent = total > 0 ? ((acertos / total) * 100).toFixed(0) : 0;
+                        resumoHTML += `<li style="margin-bottom: 5px;">${categoria}: Acertos: <b>${acertos}/${total}</b> (${percent}%)</li>`;
+                    }
+                    resumoHTML += '</ul>';
+
+                    qp.innerHTML = `
+                        🎉 <strong>Quiz finalizado! Sua pontuação: ${pontuacao} de ${quizPerguntas.length} corretas.</strong>
+                        <h3 style="margin-top: 20px; font-size: 1.3em;">Seu Desempenho por Categoria:</h3>
+                        ${resumoHTML}
+                        <p style="font-style: italic; margin-top: 20px;">Revise as abas para melhorar seu desempenho e bater seu recorde!</p>
+                    `;
                     btnResp.style.display = 'none';
                     btnNext.style.display = 'inline-block';
                     btnNext.textContent = "Refazer Quiz";
-                    perguntaAtual = -1; 
-                    pontuacao = 0; 
+                    perguntaAtual = -1; // Flag para Refazer Quiz
+                    pontuacao = 0; // Resetar pontuação
                 }
                  qo.querySelectorAll('input[type="radio"]').forEach(radio => radio.disabled = false);
             }
@@ -690,14 +911,19 @@
                     return;
                 }
                 
-                const correta = quizPerguntas[perguntaAtual].resposta;
+                const questao = quizPerguntas[perguntaAtual];
+                const correta = questao.resposta;
+                const explicacao = questao.explicacao;
+
                 if (sel.value === correta) {
-                    feedback.textContent = '✅ Resposta correta!';
+                    feedback.innerHTML = `✅ **Resposta correta!** <br><span style="font-weight: normal; font-size: 0.9em;">${explicacao}</span>`;
                     feedback.className = 'feedback-quiz correto';
                     pontuacao++; 
+                    questao.acertou = true;
                 } else {
-                    feedback.textContent = `❌ Resposta incorreta. A correta é: ${correta}`;
+                    feedback.innerHTML = `❌ **Resposta incorreta.** A correta é: ${correta}. <br><span style="font-weight: normal; font-size: 0.9em;">${explicacao}</span>`;
                     feedback.className = 'feedback-quiz incorreto';
+                    questao.acertou = false;
                 }
                 
                 feedback.style.display = 'block';
@@ -709,14 +935,18 @@
 
             function proximaPergunta() {
                 if (perguntaAtual === -1) { 
+                    // Refazer Quiz
                     perguntaAtual = 0;
+                    quizPerguntas = JSON.parse(JSON.stringify(QUIZ_JSON_DATA)); // Zera as flags de acerto e pega o original
+                    quizPerguntas.sort(() => Math.random() - 0.5); // Re-embaralha
                 } else {
                     perguntaAtual++;
                 }
                 renderizarPergunta();
             }
 
-            function init() {
+            async function init() {
+                await fetchQuiz();
                 const btnResp = document.getElementById('quiz-responder');
                 const btnNext = document.getElementById('quiz-proxima');
                 if (btnResp) btnResp.addEventListener('click', responderQuiz);
